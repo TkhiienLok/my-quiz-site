@@ -1,5 +1,7 @@
 {% extends "base_generic.html" %}
 
+{% block title %}<title>Quizzes Library info</title>{% endblock %}
+
 {% block content %}
 <h1>Quizzes Library Home</h1>
 
@@ -12,6 +14,10 @@
     <li><strong>Quizzes:</strong> {{ num_quizzes }}</li>
     <li><strong>Quizzes passed:</strong> {{ num_passed }}</li>
     <li><strong>Authors:</strong> {{ num_authors }}</li>
+  </ul>
+
+  <ul>
+      <li><strong>Math Quizzes:</strong> {{ num_math_quizzes }}</li>
   </ul>
 
 {% endblock %}

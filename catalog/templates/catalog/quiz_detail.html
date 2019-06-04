@@ -1,0 +1,21 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+  <h1>Title: {{ quiz.title }}</h1>
+
+  <p><strong>Author:</strong> <a href="">{{ quiz.author }}</a></p> <!-- author detail link not yet defined -->
+  <p><strong>Description:</strong> {{ quiz.summary}}</p>
+  <p><strong>Topic:</strong> {% for topic in quiz.topic.all %} {{ topic }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>
+
+  <div style="margin-left:20px;margin-top:20px">
+    <h4>Questions</h4>
+    <p>
+    {% for question in quiz.quiestion.all %}
+    {{ question }}
+    <hr>
+<!--    <p class="{% if quiz.status == 'p' %}text-success{% elif copy.status == 'n' %}text-danger{% else %}text-warning{% endif %}">{{ quiz.get_status_display }}</p>-->
+<!--    {% if quiz.status != 'p' %}<p><strong>Not passed</strong> {{quiz.passed_date}}</p>{% endif %}-->
+<!--    <p class="text-muted"><strong>Id:</strong> {{quiz.id}}</p>-->
+     {% endfor %}</p>
+  </div>
+{% endblock %}
