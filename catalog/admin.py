@@ -26,7 +26,7 @@ admin.site.register(Author, AuthorAdmin)
 @admin.register(Quiz)
 class QuizAdmin(admin.ModelAdmin):
     list_display = ('title', 'author', 'display_topic')
-    list_filter = ('status','title')
+    list_filter = ('status', 'title')
     # inlines = [QuizzesInstanceInline]
 
 

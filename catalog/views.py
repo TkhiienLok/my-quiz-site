@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import Quiz, Author, QuizInstance, Topic
+from .models import Quiz, Author, Topic
 # Create your views here.
 
 
