@@ -1,0 +1,17 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+<h1>Quizzes Library Home</h1>
+
+  <p>Welcome to <em>QuizLibrary</em>, a very basic Django website developed as platform for passing and creating quizzes.</p>
+
+<h2>Dynamic content</h2>
+
+  <p>The library has the following record counts:</p>
+  <ul>
+    <li><strong>Quizzes:</strong> {{ num_quizzes }}</li>
+    <li><strong>Quizzes passed:</strong> {{ num_passed }}</li>
+    <li><strong>Authors:</strong> {{ num_authors }}</li>
+  </ul>
+
+{% endblock %}

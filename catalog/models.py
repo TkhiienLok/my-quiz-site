@@ -1,9 +1,9 @@
 from django.db import models
-from django.urls import reverse #Used to generate URLs by reversing the URL patterns
+from django.urls import reverse  # Used to generate URLs by reversing the URL patterns
 from django.contrib.auth.models import User
 
-# Create your models here.
 
+# Create your models here.
 class Topic(models.Model):
     """
     Model representing a quiz topic (e.g. Math, Programming, English etc.)
@@ -15,7 +15,6 @@ class Topic(models.Model):
         String for representing the Model object (in Admin site etc.)
         """
         return self.name
-
 
 
 class Quiz(models.Model):
@@ -31,14 +30,25 @@ class Quiz(models.Model):
     # ManyToManyField used because genre can contain many books. Quizs can cover many topics.
     # Topic class has already been defined so we can specify the object above.
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+
+    passed_date = models.DateField(null=True, blank=True)
+    PASS_STATUS = (
+        ('p', 'passed'),
+        ('n', 'not passed'),
+    )
+
+    status = models.CharField(max_length=1, choices=PASS_STATUS, blank=True, default='n',
+                              help_text='Is the quiz passed')
+
+    class Meta:
+        ordering = ["passed_date"]
     
     def __str__(self):
         """
         String for representing the Model object.
         """
         return self.title
-    
-    
+
     def get_absolute_url(self):
         """
         Returns the url to access a particular quiz instance.
@@ -54,34 +64,6 @@ class Quiz(models.Model):
     display_topic.short_description = 'Topic'
 
 
-import uuid # Required for unique instances
-
-
-class QuizInstance(models.Model):
-    """
-    Model representing a specific test (i.e. that user can pass).
-    """
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, help_text="Unique ID for this particular quiz across whole library")
-    quiz = models.ForeignKey('Quiz', on_delete=models.SET_NULL, null=True) 
-    due_back = models.DateField(null=True, blank=True)
-
-    PASS_STATUS = (
-        ('p', 'passed'),
-        ('n', 'not passed'),
-    )
-
-    status = models.CharField(max_length=1, choices=PASS_STATUS, blank=True, default='n', help_text='Is the quiz passed')
-
-    class Meta:
-        ordering = ["due_back"]
-
-    def __str__(self):
-        """
-        String for representing the Model object
-        """
-        return '{0} ({1})'.format(str(self.id)[:4]+'...'+str(self.id)[-4:], self.quiz.title)
-
-
 class Question(models.Model):
     question = models.TextField(max_length=200, default="")
     option1 = models.CharField(max_length=50, default="")
@@ -89,7 +71,7 @@ class Question(models.Model):
     option3 = models.CharField(max_length=50, default="")
     option4 = models.CharField(max_length=50, default="")
     answer = models.CharField(max_length=50, default="")
-    exam = models.ForeignKey(QuizInstance, on_delete=models.SET_NULL, null=True)
+    exam = models.ForeignKey(Quiz, on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
         return self.question
