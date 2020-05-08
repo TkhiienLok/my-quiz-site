@@ -1,17 +1,15 @@
-{% extends "base_generic.html" %}
+{% extends "base.html" %}
 
 {% block content %}
     <h1>Quiz List</h1>
 
     {% if quiz_list %}
     <ul>
-
       {% for quiz in quiz_list %}
       <li>
         <a href="{{ quiz.get_absolute_url }}">{{ quiz.title }}</a> ({{quiz.author}})
       </li>
       {% endfor %}
-
     </ul>
     {% else %}
       <p>There are no quizzes in the library.</p>
