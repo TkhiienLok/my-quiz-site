@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 
 import os
 import environ
+import dj_database_url
+import django_heroku
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -35,7 +37,7 @@ SECRET_KEY = env.str('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1', '0.0.0.0', 'localhost', 'lok-quiz-app.herokuapp.com']
 
 
 # Application definition
@@ -84,12 +86,20 @@ WSGI_APPLICATION = 'quizlibrary.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+if ENV:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': env.str('DB_NAME', default=''),
+            'USER': env.str('DB_USER', default=''),
+            'PASSWORD': env.str('DB_PASSWORD', default=''),
+            'HOST': env.str('DB_HOST'),
+            'PORT': env.str('DB_PORT')
+        }
     }
-}
+else:
+    DATABASES = dict()
+    DATABASES['default'] = dj_database_url.config(conn_max_age=600)
 
 
 # Password validation
@@ -129,3 +139,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
+
+DEBUG_PROPAGATE_EXCEPTIONS = not DEBUG
+
+django_heroku.settings(locals())
+
+if not ENV:
+    del DATABASES['default']['OPTIONS']['sslmode']
