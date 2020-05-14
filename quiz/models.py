@@ -3,6 +3,9 @@ import re
 from django.db import models
 from django.urls import reverse
 from django.contrib.auth.models import User
+from django.template.defaultfilters import truncatewords_html
+from django.utils import timezone
+from accounts.models import UserProfile
 
 
 class CategoryManager(models.Manager):
@@ -37,11 +40,12 @@ class Quiz(models.Model):
         (3, 'close'),
     )
     title = models.CharField(max_length=200)
-    author = models.ForeignKey('Author', related_name='author', on_delete=models.SET_NULL, null=True)
+    author = models.ForeignKey(UserProfile, related_name='author', on_delete=models.SET_NULL, null=True)
     slug = models.SlugField('slug')
     summary = models.TextField(max_length=1000, help_text="Enter a brief description of the test")
     category = models.ManyToManyField(Category, help_text="Select a topic for this quiz")
-    publish = models.DateTimeField('publish')
+    status = models.IntegerField('status', choices=STATUS_CHOICES, default=1)
+    published_date = models.DateTimeField('published_date', null=True, blank=True)
     students = models.ManyToManyField(User, blank=True, related_name='students')
     created = models.DateTimeField('created', auto_now_add=True)
 
@@ -49,18 +53,15 @@ class Quiz(models.Model):
         verbose_name = 'quiz'
         verbose_name_plural = 'quizzes'
         db_table = 'quizzes'
-        ordering = ('-publish',)
+        ordering = ('-published_date',)
 
     def __str__(self):
         return self.title
 
     def get_absolute_url(self):
-        return reverse('quiz-detail', args=[str(self.id)])
-
-    # def get_absolute_url(self):
-    #     return reverse('quiz_detail', kwargs={
-    #         'slug': self.slug,
-    #     })
+        return reverse('quiz-detail', kwargs={
+            'slug': self.slug,
+        })
 
     def display_category(self):
         return ', '.join([category.name for category in self.category.all()[:3]])
@@ -69,24 +70,34 @@ class Quiz(models.Model):
         return Question.objects.filter(quiz=self).count()
 
     def get_process_quiz_url(self):
-        return reverse('process_quiz', kwargs={
+        return reverse('process-quiz', kwargs={
             'slug': self.slug,
         })
 
-    display_category.short_description = 'Topic'
+    def publish(self):
+        self.published_date = timezone.now()
+        self.status = 2
+        self.save()
+
+    def close(self):
+        self.status = 3
+        self.save()
+
+    def get_status(self):
+        statuses = dict(self.STATUS_CHOICES)
+        return statuses[self.status]
+
+    display_category.short_description = 'Category'
 
 
 class Question(models.Model):
     question = models.TextField(max_length=200, default="")
-    option1 = models.CharField(max_length=50, default="")
-    option2 = models.CharField(max_length=50, default="")
-    option3 = models.CharField(max_length=50, default="")
-    option4 = models.CharField(max_length=50, default="")
-    answer = models.CharField(max_length=50, default="")
     quiz = models.ForeignKey(Quiz, on_delete=models.SET_NULL, null=True)
 
-    def __str__(self):
-        return self.question
+    class Meta:
+        verbose_name = 'question'
+        verbose_name_plural = 'questions'
+        db_table = 'quiz_questions'
 
     def display_quiz(self):
         """
@@ -94,17 +105,38 @@ class Question(models.Model):
         """
         return self.quiz.title
 
+    def get_answers_list(self):
+        return [(answer.id, answer.content) for answer in Answer.objects.filter(question=self)]
 
-class Author(models.Model):
-    first_name = models.CharField(max_length=100)
-    last_name = models.CharField(max_length=100)
-    email = models.EmailField()
+    @property
+    def correct_answer(self):
+        return Answer.objects.filter(question=self).filter(correct=True)[0]
 
-    def get_absolute_url(self):
-        return reverse('author-detail', kwargs={'pk': self.pk})
+    @property
+    def title(self):
+        return u"%s" % truncatewords_html(self.question, 10)
 
     def __str__(self):
-        return '{0}, {1}'.format(self.last_name, self.first_name)
+        return self.title
+
+
+class Answer(models.Model):
+    question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name="choices")
+    content = models.TextField('answer')
+    weight = models.IntegerField('weight', default=1)
+    correct = models.BooleanField(blank=False,
+                                  default=False,
+                                  help_text="Is this a correct answer?",
+                                  verbose_name="Correct")
+
+    class Meta:
+        verbose_name = 'answer'
+        verbose_name_plural = 'answers'
+        db_table = 'quiz_answers'
+        ordering = ("weight",)
+
+    def __str__(self):
+        return u"%s" % truncatewords_html(self.content, 10)
 
 
 class Score(models.Model):
@@ -124,9 +156,13 @@ class Score(models.Model):
         list_filter = ('quiz', 'student')
 
     def get_absolute_url(self):
-        return reverse('quiz_detail', kwargs={
+        return reverse('quiz-detail', kwargs={
             'slug': self.quiz.slug,
         })
+
+    @property
+    def get_correct_answers(self):
+        return [q.question for q in self.correct_answers.all()]
 
     @property
     def correct_answer_count(self):

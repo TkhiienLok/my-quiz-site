@@ -1,23 +1,8 @@
 from django.contrib import admin
-from .models import Author, Category, Quiz,  Question, Score
+import nested_admin
+from quiz.models import Category, Quiz,  Question, Score, Answer
 
 admin.site.register(Category)
-
-
-class AuthorAdmin(admin.ModelAdmin):
-    list_display = ('last_name', 'first_name')
-    fields = ['first_name', 'last_name']
-
-
-class QuestionInline(admin.TabularInline):
-    model = Question
-    extra = 1
-
-
-class QuizAdmin(admin.ModelAdmin):
-    list_display = ('title', 'publish', 'display_category')
-    list_filter = ('title', 'category')
-    inlines = [QuestionInline]
 
 
 @admin.register(Score)
@@ -26,5 +11,17 @@ class ScoreAdmin(admin.ModelAdmin):
     list_filter = ('quiz', 'student')
 
 
+class AnswerInline(nested_admin.NestedStackedInline):
+    model = Answer
+
+
+class QuestionInline(nested_admin.NestedStackedInline):
+    model = Question
+    inlines = [AnswerInline]
+
+
+class QuizAdmin(nested_admin.NestedModelAdmin):
+    inlines = [QuestionInline]
+
+
 admin.site.register(Quiz, QuizAdmin)
-admin.site.register(Author, AuthorAdmin)

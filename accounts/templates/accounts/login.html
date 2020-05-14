@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load static compress %}
+
+{% block head %}
+<title>Quiz App | Login</title>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Welcome!</h1>
+    <form method="post" action="{% url 'accounts:login' %}" class="signin-signout-form">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-md-4 col-xs-12 col-sm-8">
+                {% for message in messages %}
+                    {% if "login" in message.tags %}
+                        <div class="alert alert-danger">
+                            {{ message }}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+                <div class="form-group">
+                    <label for="username" class="login-input-label">Username</label>
+                    <input type="text" name="username" class="form-control" placeholder="Username">
+                </div>
+                <div class="form-group">
+                    <label for="password" class="login-input-label">Password <a class="label-link" href="{% url 'accounts:password_reset' %}">Forgot password?</a></label>
+                    <input type="password" name="password" class="form-control" placeholder="Password">
+                </div>
+                <button type="submit" class="btn submit-button">Login</button>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}

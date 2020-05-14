@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% load accounts_extras static compress %}
+
+{% block head %}
+    <title>Quiz App</title>
+    {% compress css %}
+        <link type="text/x-scss" href="{% static 'css/profile.scss' %}" rel="stylesheet" media="screen">
+    {% endcompress %}
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h2>This is {{ viewed_user.username }} profile info</h2>
+        <div class="panel panel-default col-md-8 col-xs-12 col-lg-6">
+            <div class="panel-body profile-info-list">
+                <div class="profile-data">
+                    <p><span class="profile-field-name">First name:</span> {{ viewed_user.first_name }}</p>
+                    <p><span class="profile-field-name">Last name:</span> {{ viewed_user.last_name }}</p>
+                    <p><span class="profile-field-name">Status:</span> {{ viewed_user.userprofile.gender|social_status }}</p>
+                    <p><span class="profile-field-name">Date of birth:</span> {{ viewed_user.userprofile.birth_date }}</p>
+                    <p><span class="profile-field-name">Location:</span> {{ viewed_user.userprofile.location }}</p>
+                    <p><span class="profile-field-name">Website:</span><a href="{{ viewed_user.userprofile.website }}"> {{ viewed_user.userprofile.website }}</a></p>
+                    <p><span class="profile-field-name">Bio:</span> {{ viewed_user.userprofile.bio }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

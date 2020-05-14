@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container col-md-10">
+        <p>
+        Your password has been set. You may go ahead and <a href="{% url 'accounts:login' %}">sign in</a> now.
+        </p>
+    </div>
+{% endblock %}

@@ -1,0 +1,55 @@
+@import "theme";
+
+.signin-signout-form {
+    flex-direction: column;
+    margin: 4px 16px 4px 2px;
+}
+@media (max-width: 768px) {
+    .signin-signout-form {
+        margin-left: 2px;
+        margin-right: 2px;
+    }
+}
+@media (min-width: 769px) {
+    .signin-signout-form {
+        width: 100%;
+        font-size: 20px;
+    }
+}
+
+.select-date-widget {
+    display: inline-block;
+}
+
+select[name$="_day"].select-date-widget {
+    width: 27%;
+}
+select[name$="_month"].select-date-widget {
+    width: 38%;
+}
+select[name$="_year"].select-date-widget {
+    width: 35%;
+}
+
+ul[id$="_gender"] {
+    display: flex;
+    list-style: none;
+    label {
+        margin-right: 40px;
+    }
+}
+
+.edit-profile-form, .signup-form {
+    margin-top: 22px;
+}
+
+.label-link {
+    float: right;
+    font-size: 12px;
+    color: $bright_purple;
+    text-decoration: none;
+}
+
+.login-input-label {
+    display: block;
+}

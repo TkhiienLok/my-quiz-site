@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>Quiz App | Signup</title>
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h2>Sign up</h2>
+        <form method="post" class="signup-form">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-md-6 col-xs-12 col-sm-8">
+                {% for field in form %}
+                    <div class="form-group">
+                        {{ field }}
+                        {% if field.help_text %}
+                            <small style="color: grey">{{ field.help_text }}</small>
+                        {% endif %}
+                        {% for error in field.errors %}
+                            <div class="alert alert-danger">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+                </div>
+            </div>
+            <button type="submit" class="btn submit-button">Sign up</button>
+        </form>
+    </div>
+{% endblock %}

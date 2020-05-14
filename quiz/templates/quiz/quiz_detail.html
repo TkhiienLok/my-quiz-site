@@ -1,21 +1,33 @@
-{% extends "base.html" %}
+﻿{% extends "base.html" %}
 
 {% block content %}
-  <h1>Title: {{ quiz.title }}</h1>
+  <h1>Title: {{ quiz.title }}
+    {% if has_rights_to_edit %}
+      <span class="quiz-status">({{ quiz_status|capfirst }})</span>
+      {% if not quiz_status == 'public' %}
+        <a class="button-link publish-post-link post-menu-link btn save" href="{% url 'quiz_publish' pk=quiz.pk %}">Publish</a>
+      {% else %}
+        <a class="button-link publish-post-link post-menu-link btn remove-button" href="{% url 'quiz_close' pk=quiz.pk %}">Close</a>
+      {% endif %}
+    {% endif %}
+  </h1>
 
-  <p><strong>Author:</strong> <a href="">{{ quiz.author }}</a></p> <!-- author detail link not yet defined -->
-  <p><strong>Description:</strong> {{ quiz.summary}}</p>
-  <p><strong>Topic:</strong> {% for topic in quiz.topic.all %} {{ topic }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>
+  <p><strong>Author:</strong> <a href="{{ quiz.author.get_absolute_url }}">{{ quiz.author }}</a></p>
+  <p><strong>Description:</strong> {{ quiz.summary }}</p>
+  <p><strong>Category:</strong> {% for category in quiz.category.all %} {{ category }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>
 
   <div style="margin-left:20px;margin-top:20px">
     <h4>Questions</h4>
-    <p>
-    {% for question in quiz.quiestion.all %}
-    {{ question }}
-    <hr>
-<!--    <p class="{% if quiz.status == 'p' %}text-success{% elif copy.status == 'n' %}text-danger{% else %}text-warning{% endif %}">{{ quiz.get_status_display }}</p>-->
-<!--    {% if quiz.status != 'p' %}<p><strong>Not passed</strong> {{quiz.passed_date}}</p>{% endif %}-->
-<!--    <p class="text-muted"><strong>Id:</strong> {{quiz.id}}</p>-->
-     {% endfor %}</p>
+    <form action="{{ quiz.get_process_quiz_url }}" method="post" accept-charset="utf-8">
+      {% csrf_token %}
+      {% for form in form_list %}
+        <fieldset>
+          <legend><span class="question-counter">{{ forloop.counter }})</span> {{ form.question }}</legend>
+          {{ form.as_p }}
+        </fieldset>
+      <hr>
+      {% endfor %}
+      <p><input type="submit" value="Done &rarr;"></p>
+    </form>
   </div>
 {% endblock %}

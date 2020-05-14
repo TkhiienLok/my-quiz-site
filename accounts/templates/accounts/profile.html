@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% load accounts_extras static compress %}
+
+{% block head %}
+    <title>Quiz App | Profile</title>
+    {% compress css %}
+        <link type="text/x-scss" href="{% static 'css/profile.scss' %}" rel="stylesheet" media="screen">
+    {% endcompress %}
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h2>Hi, {{ user.username }}! This is your profile info</h2>
+        <div class="panel panel-default col-md-8 col-xs-12 col-lg-6">
+            <div class="panel-body profile-info-list">
+                <div>
+                    <div class="profile-data">
+                        <p><span class="profile-field-name">First name:</span> {{ user.first_name }}</p>
+                        <p><span class="profile-field-name">Last name:</span> {{ user.last_name }}</p>
+                        <p><span class="profile-field-name">Status:</span> {{ user.userprofile.gender|social_status }}</p>
+                        <p><span class="profile-field-name">Date of birth:</span> {{ user.userprofile.birth_date }}</p>
+                        <p><span class="profile-field-name">Email confirmed:</span> {% if user.userprofile.email_confirmed %}yes{% else %}no{% endif %}</p>
+                        <p><span class="profile-field-name">Email:</span> {{ user.email }}</p>
+                        <p><span class="profile-field-name">Location:</span> {{ user.userprofile.location }}</p>
+                        <p><span class="profile-field-name">Website:</span><a href="{{ user.userprofile.website }}"> {{ user.userprofile.website }}</a></p>
+                        <p><span class="profile-field-name">Bio:</span> {{ user.userprofile.bio }}</p>
+                    </div>
+                    <a href="{% url 'accounts:change-password' %}">Change password</a>
+                    <a href="{% url 'accounts:edit-profile-url' %}" class="btn edit-profile-button">Edit</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
