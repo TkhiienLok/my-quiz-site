@@ -1,0 +1,367 @@
+@import "../theme";
+
+body {
+    padding-left: 15px;
+    padding-right: 10px;
+    background-color: $light_grey;
+    font-family: 'Mukta Malar', sans-serif;
+    font-size: 16px;
+}
+
+a {
+    color: $light_violet;
+}
+
+.page-header {
+    margin-top: 0;
+    padding: 20px 20px 20px 40px;
+    h1, h1 a, h1 a:visited, h1 a:active {
+        color: $white;
+        text-decoration: none;
+    }
+    .main-navbar-brand, .main-navbar-brand:hover, .main-navbar-brand:active, .main-navbar-brand:link, .main-navbar-brand:visited {
+        color: $white;
+    }
+    .header-greeting {
+        float: left;
+        height: 50px;
+        padding: 15px 15px;
+        font-size: 18px;
+        line-height: 20px;
+        color: $white;
+    }
+}
+
+@media only screen and (min-width: 768px) {
+    .page-header {
+        h1, h1 a, h1 a:visited, h1 a:active {
+            font-size: 36pt;
+        }
+        .menu-logout-icon {
+            display: none;
+        }
+        .menu-logout-link {
+            display: block;
+        }
+    }
+    .main-navbar-brand {
+        font-size: 25pt;
+    }
+
+    .navbar-default {
+        background-color: $turquoise;
+    }
+
+    .main-navbar {
+        background-color: $dark_violet;
+        color: $white;
+        padding: 2px 35px 2px;
+    }
+    .sub-heading {
+        font-size: larger;
+        margin-left: 40px;
+    }
+    #vote_form {
+        margin-left: 40px;
+    }
+
+    main {
+        margin-right: 52px;
+    }
+}
+main {
+    padding-right: 10px;
+}
+
+.navbar.quiz-app-nav {
+    background-color: $purple;
+    padding: 0;
+    .navbar-brand {
+        margin-left: 16px;
+    }
+    .quiz-search-button {
+        color: white;
+        border: 1px solid white;
+    }
+}
+.quiz-app-nav .quiz-navbar-collapse {
+    background-color: $dark_violet;
+    padding: 4px 24px 2px;
+}
+.content {
+    margin-left: 40px;
+    padding-top: 10px;
+    background-color: $white;
+    margin-top: 78px;
+    padding-top: 22px;
+    padding-left: 30px;
+}
+
+/* For desktop: */
+.col-1 {width: 8.33%;}
+.col-2 {width: 16.66%;}
+.col-3 {width: 25%;}
+.col-4 {width: 33.33%;}
+.col-5 {width: 41.66%;}
+.col-6 {width: 50%;}
+.col-7 {width: 58.33%;}
+.col-8 {width: 66.66%;}
+.col-9 {width: 75%;}
+.col-10 {width: 83.33%;}
+.col-11 {width: 91.66%;}
+.col-12 {width: 100%;}
+
+.submit-button, .remove-button, .edit-button, .view-button {
+    color: $white;
+    font-family: 'Lato', sans-serif;
+    font-size: 16px;
+    margin: 4px 0 12px;
+    text-decoration: none;
+    float: right;
+}
+
+.submit-button {
+    background-color: $lilac_violet;
+}
+
+.edit-button {
+    background-color: $bright_purple;
+}
+
+.view-button {
+    background-color: $turquoise;
+}
+
+.remove-button {
+    background-color: $bright_purple;
+}
+
+.submit-button:hover, .submit-button:active {
+    background-color: $dust_violet;
+    color: $white;
+    text-decoration: none;
+}
+.view-button:hover, .view-button:active {
+    background-color: $lilac_violet;
+    color: $white;
+    text-decoration: none;
+}
+
+.edit-button:hover, .edit-button:active {
+    background-color: $bright_turquoise;
+    color: $white;
+    text-decoration: none;
+}
+
+.remove-button:hover, .remove-button:active {
+    background-color: $dust_purple;
+    color: $white;
+    text-decoration: none;
+}
+
+.save {
+    float: right;
+    border-radius: 8px;
+    background-color: $lilac_violet;
+    color: $white;
+    height: 38px;
+    margin-right: 14px;
+    font-size: 18px;
+    text-decoration: none;
+    margin-bottom: 12px;
+}
+
+.save:hover {
+    background-color: $dust_violet;
+    color: $white;
+}
+
+.save:active {
+    background-color: $dust_violet;
+    color: $white;
+}
+
+.poll-link {
+    color: $bright_turquoise;
+    font-size: 18px;
+}
+
+.vote-progress {
+  width: 100%;
+  background-color: $light_grey;
+}
+
+.vote-bar {
+  width: 1%;
+  height: 20px;
+  background-color: $lilac_violet;
+  color: $white;
+  font-size: 18px bold;
+  padding-left: 7px;
+  margin-bottom: 12px;
+}
+
+.poll-panel {
+    width: 75%;
+}
+
+#vote_results ul, #vote_results-detail ul {
+    list-style-type: none;
+}
+
+.poll-list {
+    list-style-type: none;
+}
+
+.question-label {
+    font-size: 22px;
+}
+
+.question-field {
+    font-size: 16px;
+}
+
+.poll-error {
+    text-align-last: center;
+    color: $dark_turquoise;
+}
+
+.poll-create-panel {
+    padding: 0 25px;
+    background-color: $light_grey;
+}
+
+#navbarNav {
+    float: right;
+    font-size: 18pt;
+    margin-right: 20px;
+
+    .menu-link, .menu-link:link, .menu-link:visited {
+        color: $white;
+        font-size: 20px;
+    }
+
+    .menu-link:hover, .menu-link:active, {
+        color: $light_violet;
+    }
+}
+
+.main-navbar {
+    border: none;
+    background-image: none;
+}
+
+.additional-heading {
+    color: $dark_violet;
+}
+
+.search-bar {
+    max-width: 500px;
+    width: 100%;
+    margin: 0 0 18px;
+
+    .searchContainer {
+        flex: 1 1 300px;
+        position: relative;
+    }
+
+    .searchButton {
+        padding: 0.5rem;
+        position: absolute;
+        top: 1px;
+        right: 1px;
+        margin: 0;
+        width: 10%;
+        background-color: $light_grey;
+    }
+}
+
+@media only screen and (max-width: 768px) {
+    /* For mobile phones: */
+    [class*="col-"] {
+        width: 100%;
+    }
+
+    .content {
+        margin-left: 0px;
+        padding-top: 10px;
+        margin-top: 56px;
+        padding-left: 11px;
+    }
+
+    h1, h1 a, h1 a:visited, h1 a:active {
+        font-size: 22pt;
+    }
+
+    .sub-heading {
+        font-size: larger;
+        margin-left: 20px;
+    }
+
+    #vote_form {
+        margin-left: 20px;
+    }
+
+    .menu-logout-icon {
+        display: inline-block;
+    }
+
+    .menu-logout-link {
+        display: none;
+    }
+
+    #navbarNav {
+        float: right;
+        font-size: 16pt;
+        margin-right: 18px;
+    }
+
+    .main-navbar {
+        background-color: $turquoise;
+    }
+
+    .main-navbar-brand {
+        font-size: 16pt;
+    }
+
+    .main-navbar-menu {
+        background-color: $turquoise;
+    }
+
+    .main-navbar-header {
+        background-color: $dark_violet;
+    }
+
+    .header-greeting {
+        display: none;
+    }
+
+    #vote_results ul {
+        padding-left: 16px;
+    }
+
+    .poll-panel {
+        width: 85%;
+    }
+}
+
+@media only screen and (min-width: 769px) and (max-width:1011px) {
+    .content {
+        margin-left: 18px;
+        margin-top: 78px;
+        padding-left: 14px;
+    }
+
+    .header-greeting {
+        display: none;
+    }
+
+    .sub-heading {
+        font-size: larger;
+        margin-left: 30px;
+    }
+
+    #vote_form {
+        margin-left: 30px;
+    }
+}

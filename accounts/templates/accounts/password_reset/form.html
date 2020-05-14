@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>Quiz App | Forgot password</title>
+{% endblock %}
+
+{% block content %}
+    <div class="container col-md-10">
+        <p>Please, enter your email address, that you used for registration and we will send you a password reset letter</p>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            {% for field in form %}
+                {% for error in field.errors %}
+                    <p style="color:red;">{{ error }}</p>
+                {% endfor %}
+            {% endfor %}
+            <button class="btn save" type="submit">Submit</button>
+        </form>
+    </div>
+{% endblock %}

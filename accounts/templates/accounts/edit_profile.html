@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>Quiz App | Edit profile</title>
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h2>Here you can edit your profile info</h2>
+        <form method="post" class="edit-profile-form">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-md-6 col-xs-12 col-sm-8">
+                {% for field in form %}
+                    <div class="form-group">
+                        {{ field }}
+                        {% if field.help_text %}
+                            <small style="color: grey">{{ field.help_text }}</small>
+                        {% endif %}
+                        {% for error in field.errors %}
+                            <div class="alert alert-danger">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+                <button type="submit" class="save btn">Save</button>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}

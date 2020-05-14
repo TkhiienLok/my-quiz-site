@@ -1,0 +1,31 @@
+@import "theme";
+
+.quiz-content {
+    /* margin-top: 52px; */
+}
+
+.question-list {
+    list-style: none;
+    .correct {
+        background-color: $light_turquoise;
+    }
+}
+
+ul[id$="answers"] {
+    list-style: none;
+}
+
+.correct-question .incorrect-question {
+    font-size: 12px;
+}
+
+.correct-question {
+    color: $dust_turquoise;
+}
+.incorrect-question {
+    color: $dust_purple;
+}
+
+.quiz-status {
+    color: $turquoise;
+}

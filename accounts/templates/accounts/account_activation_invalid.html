@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% load accounts_extras static compress %}
+
+{% block head %}
+    <title>Quiz App | Activation failed</title>
+    {% compress css %}
+        <link type="text/x-scss" href="{% static 'css/profile.scss' %}" rel="stylesheet" media="screen">
+    {% endcompress %}
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h1>Account activation failed (</h1>
+        <a href="{% url 'posts' %}" class="btn button-link">Go to posts</a>
+    </div>
+{% endblock %}

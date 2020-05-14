@@ -43,6 +43,7 @@ ALLOWED_HOSTS = ['127.0.0.1', '0.0.0.0', 'localhost', 'lok-quiz-app.herokuapp.co
 # Application definition
 
 INSTALLED_APPS = [
+    'nested_admin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -50,6 +51,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'quiz',
+    'accounts',
+    'widget_tweaks',
+    'bootstrap3',
+    'six'
 ]
 
 MIDDLEWARE = [
@@ -67,7 +72,7 @@ ROOT_URLCONF = 'quizlibrary.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -79,6 +84,11 @@ TEMPLATES = [
         },
     },
 ]
+
+TEMPLATE_LOADERS = (
+    'django.template.loaders.filesystem.Loader',
+    'django.template.loaders.app_directories.Loader',
+)
 
 WSGI_APPLICATION = 'quizlibrary.wsgi.application'
 
@@ -139,8 +149,48 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+STATICFILES_FINDERS = [
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'compressor.finders.CompressorFinder',
+]
+
+INSTALLED_APPS += [
+    'compressor',
+]
+
+COMPRESS_URL = STATIC_URL
+COMPRESS_ROOT = STATIC_ROOT
+COMPRESS_ENABLED = env.bool('COMPRESS_ENABLED', False)
+COMPRESS_OFFLINE = env.bool('COMPRESS_OFFLINE', False)
+COMPRESS_PRECOMPILERS = (
+    ('text/x-scss', 'django_libsass.SassCompiler'),
+    ('text/x-sass', 'django_libsass.SassCompiler'),
+)
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'static'),
+)
+LIBSASS_OUTPUT_STYLE = 'compressed'
+
+if DEBUG:
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+else:
+    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+    EMAIL_HOST = 'smtp.gmail.com'
+    EMAIL_PORT = 587
+    EMAIL_HOST_USER = env.str('ADMIN_EMAIL')
+    EMAIL_HOST_PASSWORD = env.str('EMAIL_APP_PASSWORD')
+    EMAIL_USE_TLS = True
+
+ADMINS = [(env.str('ADMIN_NAME'), env.str('ADMIN_EMAIL'))]
 
 DEBUG_PROPAGATE_EXCEPTIONS = not DEBUG
+
+LOGIN_URL = '/accounts/login/'
+LOGIN_REDIRECT_URL = '/accounts/profile/'
 
 django_heroku.settings(locals())
 
