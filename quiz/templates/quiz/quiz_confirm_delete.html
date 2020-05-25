@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <form method="post">{% csrf_token %}
+    <div class="form-group row">
+      <div class="col-sm-12 col-md-10 col-lg-8">
+        <p><b>Are you sure you want to delete quiz "{{ object }}"?</b></p>
+        <a href="{% url 'personal-quizzes' %}" class="btn neutral-button">Cancel</a>
+        <input type="submit" value="Confirm" class="btn remove-button">
+      </div>
+    </div>
+  </form>
+{% endblock %}

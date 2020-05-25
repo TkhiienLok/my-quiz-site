@@ -118,11 +118,12 @@ main {
 .col-11 {width: 91.66%;}
 .col-12 {width: 100%;}
 
-.submit-button, .remove-button, .edit-button, .view-button, .add-button {
+.submit-button, .remove-button, .edit-button, .view-button, .add-button, .neutral-button {
     color: $white;
     font-family: 'Lato', sans-serif;
     font-size: 16px;
-    margin: 4px 0 12px;
+    margin: 4px 4px 8px;
+    padding: 0 4px;
     text-decoration: none;
     float: right;
     border-radius: 6px;
@@ -132,8 +133,8 @@ main {
     background-color: $lilac_violet;
 }
 
-.edit-button {
-    background-color: $bright_purple;
+.edit-button, .neutral-button {
+    background-color: $light_grey;
 }
 
 .view-button {
@@ -160,8 +161,8 @@ main {
     text-decoration: none;
 }
 
-.edit-button:hover, .edit-button:active {
-    background-color: $bright_turquoise;
+.edit-button:hover, .edit-button:active, .neutral-button:hover, .neutral-button:active {
+    background-color: $middle_grey;
     color: $white;
     text-decoration: none;
 }

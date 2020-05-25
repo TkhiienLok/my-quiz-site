@@ -8,6 +8,7 @@ urlpatterns = [
     path('draft-quizzes/', views.QuizDraftsListView.as_view(), name='quiz-drafts'),
     path('personal-quizzes/', views.PersonalQuizzesView.as_view(), name='personal-quizzes'),
     path('quiz/<slug>/', views.QuizDetailView.as_view(), name='quiz-detail'),
+    path('<pk>/delete/', views.QuizDeleteView.as_view(), name='quiz-delete'),
     path('process-quiz/<slug>/', views.process_quiz, name='process-quiz'),
     path('quiz/<pk>/publish/', views.QuizPublishView.as_view(), name='quiz_publish'),
     path('quiz/<pk>/close/', views.QuizCloseView.as_view(), name='quiz_close'),

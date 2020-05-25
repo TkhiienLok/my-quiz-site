@@ -9,6 +9,7 @@
       <li>
         <div style="display: inline;">
           <a href="{{ quiz.get_absolute_url }}">"{{ quiz.title }}"</a> {{ quiz.question_set.count }} questions
+          <a href="{% url 'quiz-delete' pk=quiz.pk %}" class="remove-button btn-xs">Remove <i class="far fa-trash-alt"></i></a>
           <a href="{% url 'questions-edit' pk=quiz.pk %}" class="edit-button btn-xs">Edit</a>
         </div>
       </li>

@@ -12,6 +12,7 @@ from django.views.generic import (
     DetailView,
     ListView,
     CreateView,
+    DeleteView
 )
 
 from accounts.models import UserProfile
@@ -227,6 +228,13 @@ class CreateQuizView(LoginRequiredMixin,CreateView):
             self.form_valid(form, **kwargs)
 
         return redirect(reverse('questions-edit', kwargs={'pk': self.object.pk}))
+
+
+class QuizDeleteView(DeleteView):
+    model = Quiz
+
+    def get_success_url(self):
+        return reverse('personal-quizzes')
 
 
 def edit_questions(request, pk):
