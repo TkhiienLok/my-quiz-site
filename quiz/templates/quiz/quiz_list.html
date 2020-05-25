@@ -4,13 +4,15 @@
     <h1>Quiz List</h1>
 
     {% if quiz_list %}
-    <ul>
+    <ul class="quiz-list">
       {% for quiz in quiz_list %}
       <li>
-        <a href="{{ quiz.get_absolute_url }}">{{ quiz.title }}</a> ({{quiz.author}})
+        <a href="{{ quiz.get_absolute_url }}">{{ quiz.title }}</a> (auth: {{quiz.author}}, questions: {{ quiz.question_set.count }})
       </li>
       {% endfor %}
     </ul>
+    <a href="{% url 'quiz-drafts' %}" class="view-button">Drafts</a>
+    <a href="{% url 'quiz-new' %}" class="add-button">New quiz</a>
     {% else %}
       <p>There are no quizzes in the library.</p>
     {% endif %}       

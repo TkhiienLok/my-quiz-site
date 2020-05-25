@@ -32,6 +32,13 @@ a {
     }
 }
 
+#form_set .hidden-button {
+    display: none;
+    width: 0;
+    height: 0;
+    padding: 0;
+}
+
 @media only screen and (min-width: 768px) {
     .page-header {
         h1, h1 a, h1 a:visited, h1 a:active {
@@ -111,13 +118,14 @@ main {
 .col-11 {width: 91.66%;}
 .col-12 {width: 100%;}
 
-.submit-button, .remove-button, .edit-button, .view-button {
+.submit-button, .remove-button, .edit-button, .view-button, .add-button {
     color: $white;
     font-family: 'Lato', sans-serif;
     font-size: 16px;
     margin: 4px 0 12px;
     text-decoration: none;
     float: right;
+    border-radius: 6px;
 }
 
 .submit-button {
@@ -129,11 +137,16 @@ main {
 }
 
 .view-button {
-    background-color: $turquoise;
+    background-color: $light_violet;
 }
 
 .remove-button {
     background-color: $bright_purple;
+}
+
+.add-button {
+    background-color: $light_turquoise;
+    float: none;
 }
 
 .submit-button:hover, .submit-button:active {
@@ -153,6 +166,12 @@ main {
     text-decoration: none;
 }
 
+.add-button:hover, .add-button:active {
+    background-color: $dust_turquoise;
+    color: $white;
+    text-decoration: none;
+}
+
 .remove-button:hover, .remove-button:active {
     background-color: $dust_purple;
     color: $white;
@@ -161,14 +180,13 @@ main {
 
 .save {
     float: right;
-    border-radius: 8px;
+    border-radius: 6px;
     background-color: $lilac_violet;
     color: $white;
     height: 38px;
-    margin-right: 14px;
     font-size: 18px;
     text-decoration: none;
-    margin-bottom: 12px;
+    margin: 4px 8px 12px;
 }
 
 .save:hover {
@@ -364,4 +382,30 @@ main {
     #vote_form {
         margin-left: 30px;
     }
+}
+
+.answer-forms {
+    label[for$="DELETE"] {
+        color: $bright_purple;
+    }
+}
+
+.remove-label {
+    position: relative;
+    top: 5px;
+    height: 34px;
+    font-family: 'Lato', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    text-decoration: none;
+    color: $bright_purple;
+    float:right;
+    i {
+      margin-left: 6px;
+    }
+}
+
+.remove-label:hover, .remove-label:active {
+    color: $dark_purple;
+    text-decoration: none;
 }

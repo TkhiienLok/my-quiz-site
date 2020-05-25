@@ -1,0 +1,162 @@
+{% extends "base.html" %}
+{% load bootstrap3 compress static %}
+
+{% block content %}
+{% with children_formset=question_formset %}
+<h1>Add questions and answers to quiz "{{ quiz.title }}"</h1>
+<form action="{% url 'questions-edit' pk=quiz.pk %}" method="POST">
+{{ children_formset.management_form }}
+{{ children_formset.non_form_errors }}
+
+  {% csrf_token %}
+  <div id="form_set">
+    {% for child_form in children_formset.forms %}
+      <div class="inline {{ children_formset.prefix }}">
+        {{ child_form.non_field_errors }}
+        {{ child_form.errors }}
+        <table class='no_error'>
+          <span class="question-counter">{{ forloop.counter }}) </span>
+          {% bootstrap_form  child_form %}
+        </table>
+        {% if child_form.nested %}
+          {{ child_form.nested.management_form }}
+          {{ child_form.nested.non_form_errors }}
+
+          <div class="answer-forms">
+            {% for nested_form in child_form.nested.forms %}
+            <div class="inline-answer {{ nested_form.prefix }}">
+              {{ nested_form.non_field_errors }}
+              {{ nested_form.errors }}
+              <table class='no_error'>
+              {% bootstrap_form nested_form %}
+              </table>
+            </div>
+            {% endfor %}
+            <a form-prefix="{{ child_form.nested.prefix }}"
+             id="add_{{ child_form.nested.prefix }}"
+             href="javascript:void(0)" class="btn add-button">Add answer</a>
+            <div id="empty-answer-form{{ child_form.nested.prefix }}" style="display:none">
+              {{ child_form.nested.empty_form.non_field_errors }}
+              {{ child_form.nested.empty_form.errors }}
+              {% bootstrap_form child_form.nested.empty_form %}
+            </div>
+          </div>
+
+        {% endif %}
+      </div>
+      <hr>
+    {% endfor %}
+  </div>
+  <button type="button" class="btn btn-block view-button" id="add_question">
+    Add question
+  </button>
+  <input type="submit" value="Save quiz" id="save-quiz" class="btn btn-block submit-button"/>
+</form>
+
+<div id="empty_form" style="display:none">
+  {{ children_formset.empty_form.non_field_errors }}
+  {{ children_formset.empty_form.errors }}
+  <table class='no_error'>
+    {% bootstrap_form children_formset.empty_form %}
+  </table>
+    {% if children_formset.empty_form.nested %}
+      {{ children_formset.empty_form.nested.management_form }}
+      {{ children_formset.empty_form.nested.non_form_errors }}
+
+      <div class="answer-forms">
+        {% for nested_form in children_formset.empty_form.nested.forms %}
+          <div class="inline-answer {{ nested_form.prefix }}">
+            {{ nested_form.non_field_errors }}
+            {{ nested_form.errors }}
+            <table class='no_error'>
+              {% bootstrap_form nested_form %}
+            </table>
+          </div>
+        {% endfor %}
+        <a form-prefix="{{ children_formset.empty_form.nested.prefix }}"
+         id="add_{{ children_formset.empty_form.nested.prefix }}"
+         href="javascript:void(0)" class="btn add-button">Add answer</a>
+        <div id="empty-answer-form{{ children_formset.empty_form.nested.prefix }}" style="display:none">
+          {{ children_formset.empty_form.nested.empty_form.non_field_errors }}
+          {{ children_formset.empty_form.nested.empty_form.errors }}
+          {% bootstrap_form children_formset.empty_form.nested.empty_form %}
+        </div>
+      </div>
+    {% endif %}
+</div>
+{% endwith %}
+{% endblock %}
+
+{% compress js %}
+{% block extra_script %}
+{% with children_formset=question_formset %}
+<script src="{% static 'js/jquery.formset.js' %}"></script>
+<script type="text/javascript">
+  // add question form from hidden empty form
+  $('#add_question').click(function() {
+    var form_idx = $('#id_{{ children_formset.prefix }}-TOTAL_FORMS').val();
+
+    // replace just first '__prefix__' in attributes, because second one is for nested forms
+    var questionFormsetEmptyPrefix = '{{ children_formset.empty_form.prefix }}';
+    var newQuestionFormsetEmptyPrefix = questionFormsetEmptyPrefix.replace(/__prefix__/g, form_idx);
+
+    $('#form_set').append($('#empty_form').html().replace(new RegExp(questionFormsetEmptyPrefix, "g"), newQuestionFormsetEmptyPrefix));
+    $('#id_{{ children_formset.prefix }}-TOTAL_FORMS').val(parseInt(form_idx) + 1);
+    insertDeleteIcons();
+  });
+
+  // add answer form from hidden empty form
+  $(document).on('click', '[id^=add_answer]', function() {
+    var nestedFormPrefix = $(this).attr("form-prefix");
+    var form_idx = $(`#id_${nestedFormPrefix}-TOTAL_FORMS`).val();
+    $($(`#empty-answer-form${nestedFormPrefix}`).html().replace(/__prefix__/g, form_idx)).insertBefore($(this));
+    $(`#id_${nestedFormPrefix}-TOTAL_FORMS`).val(parseInt(form_idx) + 1);
+    returnDeleteCheckboxes();
+  });
+
+  function returnDeleteCheckboxes() {  // Return the default checkboxes from hidden fields which were created by jquery.formset module:
+    var del = $('.answer-forms input:hidden[id $= "-DELETE"]');
+    if (del.length) {
+      del.each(function(i, obj) {
+        // If you specify "can_delete = True" when creating an inline formset,
+        // Django adds a checkbox to each form in the formset.
+        var deleteLabel = $(obj).parent( "label" );
+        var idLabelFor = deleteLabel.attr('for');
+        var objName = idLabelFor.replace('id_', '');
+        deleteLabel.html('<input type="checkbox" name="' + objName +'" id="' + idLabelFor +'" /> Delete answer above');
+        $(obj).remove();
+      });
+    }
+  }
+  function insertDeleteIcons() {
+    var removeQuestionLinks = $(document).find('a.remove-label');
+
+    removeQuestionLinks.each(function(i, obj) {
+      if ($(obj).has('i').length) {
+       return;
+      }
+      $(obj).append('<i class="far fa-trash-alt"></i>');
+    });
+  }
+
+  function createQuestionFormset() {
+    $(".inline.{{ children_formset.prefix }}").formset({
+      prefix: "{{ children_formset.prefix }}", // The form prefix for your django formset
+      addCssClass: "hidden-button", // CSS class applied to the add link
+      deleteCssClass: "remove-label", // CSS class applied to the delete link
+      addText: '', // Text for the add link
+      deleteText: 'Remove question', // Text for the delete link
+      formCssClass: 'inline-form' // CSS class applied to each form in a formset
+    });
+  }
+  // using jquery.formset for question formset (using just delete buttons cause add button is custom)
+  $(function() {
+    createQuestionFormset();
+    returnDeleteCheckboxes();
+    insertDeleteIcons();
+  });
+
+</script>
+{% endwith %}
+{% endblock %}
+{% endcompress %}

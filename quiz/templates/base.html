@@ -53,6 +53,10 @@
 
       <div class="collapse navbar-collapse quiz-navbar-collapse" id="navbarCollapse">
         <ul class="navbar-nav mr-auto">
+          <li class="nav-item">
+            <a class="nav-link"
+               href="{% url 'index' %}">Home <span class="sr-only">(current)</span></a>
+          </li>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               Profile
@@ -67,12 +71,15 @@
               {% endif %}
             </div>
           </li>
-          <li class="nav-item active">
-            <a class="nav-link" href="{% url 'index' %}">Home <span class="sr-
-only">(current)</span></a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'quizzes' %}">All quizzes</a>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="quizNavbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Quizzes
+            </a>
+            <div class="dropdown-menu" aria-labelledby="quizNavbarDropdownMenuLink">
+              <a class="dropdown-item" href="{% url 'quizzes' %}">Public quizzes</a>
+              <a class="dropdown-item" href="{% url 'quiz-drafts' %}">Drafts</a>
+              <a class="dropdown-item" href="{% url 'quiz-new' %}">New quiz</a>
+            </div>
           </li>
           <li class="nav-item">
             <a class="nav-link disabled" href="#">All authors</a>
@@ -104,5 +111,46 @@ only">(current)</span></a>
 href="#">Terms</a></p>
     </footer>
   </main>
+
+  {% compress js %}
+  <script type="text/javascript">
+    $(function () {
+      setNavigation();
+      getQuizSearchUrl();
+    });
+    function setNavigation() {
+      var path = window.location.pathname;
+      $(".active").removeClass("active");
+      $("nav a").each(function (ind) {
+        var href = $(this).attr('href');
+
+        if (path === href) {
+          $(this).parents("li:last").addClass("active");
+        }
+      });
+      if (!$("nav li.active").length) {
+        $("nav a").each(function (ind) {
+          var href = $(this).attr('href');
+          var pathArr = path.split('/')
+          if (pathArr[1] && href.startsWith(`/${pathArr[1]}`)) {
+            $(this).parents("li:last").addClass("active");
+            $(this).parents("li:last").addClass("active");
+          }
+        });
+      }
+    }
+    function getQuizSearchUrl() {
+      var path = window.location.pathname;
+      if (path == {% url 'quiz-drafts' %}) {
+        $('#quiz-search-form').attr('action', {% url 'quiz-drafts' %});
+        return;
+      }
+      $('#quiz-search-form').attr('action', {% url 'quizzes' %});
+      return;
+    }
+  </script>
+  {% endcompress %}
+  {% block extra_script %}
+  {% endblock %}
 </body>
 </html>

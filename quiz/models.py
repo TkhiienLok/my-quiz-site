@@ -91,7 +91,7 @@ class Quiz(models.Model):
 
 
 class Question(models.Model):
-    question = models.TextField(max_length=200, default="")
+    question = models.CharField(max_length=200, default="")
     quiz = models.ForeignKey(Quiz, on_delete=models.SET_NULL, null=True)
 
     class Meta:
@@ -110,7 +110,7 @@ class Question(models.Model):
 
     @property
     def correct_answer(self):
-        return Answer.objects.filter(question=self).filter(correct=True)[0]
+        return Answer.objects.filter(question=self).filter(correct=True)[0] if Answer.objects.filter(question=self).filter(correct=True).count() else None
 
     @property
     def title(self):
@@ -122,7 +122,7 @@ class Question(models.Model):
 
 class Answer(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name="choices")
-    content = models.TextField('answer')
+    content = models.CharField('answer', max_length=200)
     weight = models.IntegerField('weight', default=1)
     correct = models.BooleanField(blank=False,
                                   default=False,

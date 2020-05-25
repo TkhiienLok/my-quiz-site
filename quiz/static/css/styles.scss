@@ -29,3 +29,37 @@ ul[id$="answers"] {
 .quiz-status {
     color: $turquoise;
 }
+
+.answer-forms {
+    [id$=weight] {
+        width: 68px;
+    }
+}
+
+.inline.questions {
+    margin-bottom: 32px;
+    .question-counter {
+        float: left;
+        margin-right: 6px;
+    }
+}
+
+label.control-label[for$="question"], .inline.questions .question-counter {
+    font-size: 22px;
+    font-weight: 600;
+}
+
+.quiz-list {
+    li {
+        margin-bottom: 10px;
+    }
+
+    .edit-button {
+        margin: auto;
+        padding: 0 6px;
+    }
+}
+
+.quiz-detail-menu {
+    display: inline;
+}

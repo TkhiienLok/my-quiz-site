@@ -1,0 +1,21 @@
+{% block content %}
+<div class="container">
+    <h1>Edit Questions</h1>
+
+    <form action="{% url 'questions-edit' pk=quiz.pk %}" method="POST">
+    {% csrf_token %}
+    {{ form.management_form }}
+    {% for question in form %}
+        {{ question.as_p }}
+
+        {{ question.nested.management_form }}
+        {% for answer in question.nested %}
+            {{ answer.as_p }}
+        {% endfor %}
+
+    {% endfor %}
+
+    <input type="submit" value="Save" />
+    </form>
+</div>
+{% endblock %}

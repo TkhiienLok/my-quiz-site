@@ -1,0 +1,22 @@
+﻿{% extends "base.html" %}
+
+{% block content %}
+    <h1>Quiz Drafts</h1>
+
+    {% if quiz_list %}
+    <ul class="quiz-list">
+      {% for quiz in quiz_list %}
+      <li>
+        <div style="display: inline;">
+          <a href="{{ quiz.get_absolute_url }}">{{ quiz.title }} ({{quiz.author}})</a> {{ quiz.question_set.count }} questions
+          <a href="{% url 'questions-edit' pk=quiz.pk %}" class="edit-button btn-xs">Edit</a>
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
+    <a href="{% url 'quizzes' %}" class="view-button">Published quizzes</a>
+    <a href="{% url 'quiz-new' %}">New quiz</a>
+    {% else %}
+      <p>There are no quizzes in the library.</p>
+    {% endif %}       
+{% endblock %}

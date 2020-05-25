@@ -4,11 +4,14 @@
   <h1>Title: {{ quiz.title }}
     {% if has_rights_to_edit %}
       <span class="quiz-status">({{ quiz_status|capfirst }})</span>
-      {% if not quiz_status == 'public' %}
-        <a class="button-link publish-post-link post-menu-link btn save" href="{% url 'quiz_publish' pk=quiz.pk %}">Publish</a>
-      {% else %}
-        <a class="button-link publish-post-link post-menu-link btn remove-button" href="{% url 'quiz_close' pk=quiz.pk %}">Close</a>
-      {% endif %}
+      <div class="quiz-detail-menu">
+        {% if not quiz_status == 'public' %}
+          <a class="button-link publish-post-link post-menu-link btn save" href="{% url 'quiz_publish' pk=quiz.pk %}">Publish</a>
+        {% else %}
+          <a class="button-link publish-post-link post-menu-link btn remove-button" href="{% url 'quiz_close' pk=quiz.pk %}">Close</a>
+        {% endif %}
+        <a class="button-link publish-post-link post-menu-link btn view-button" href="{% url 'questions-edit' pk=quiz.pk %}">Edit Questions</a>
+      </div>
     {% endif %}
   </h1>
 

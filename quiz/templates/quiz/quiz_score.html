@@ -8,16 +8,19 @@
 
 {% block content %}
 <div class="container">
-	<h2>{{ quiz.title }}
+	<h1>"{{ quiz.title }}" Results
 		{% if has_rights_to_edit %}
 		<span class="quiz-status">({{ quiz_status|capfirst }})</span>
-			{% if not quiz_status == 'public' %}
-				<a class="button-link publish-post-link post-menu-link btn save" href="{% url 'quiz_publish' pk=quiz.pk %}">Publish</a>
-			{% else %}
-				<a class="button-link publish-post-link post-menu-link btn remove-button" href="{% url 'quiz_close' pk=quiz.pk %}">Close</a>
-			{% endif %}
+			<div class="quiz-detail-menu">
+				{% if not quiz_status == 'public' %}
+					<a class="button-link publish-post-link post-menu-link btn save" href="{% url 'quiz_publish' pk=quiz.pk %}">Publish</a>
+				{% else %}
+					<a class="button-link publish-post-link post-menu-link btn remove-button" href="{% url 'quiz_close' pk=quiz.pk %}">Close</a>
+				{% endif %}
+				<a class="button-link publish-post-link post-menu-link btn view-button" href="{% url 'questions-edit' pk=quiz.pk %}">Edit Questions</a>
+			</div>
 		{% endif %}
-	</h2>
+	</h1>
 	<p><strong>Author:</strong> <a href="{{ quiz.author.get_absolute_url }}">{{ quiz.author }}</a></p>
   <p><strong>Description:</strong> {{ quiz.summary }}</p>
   <p><strong>Category:</strong> {% for category in quiz.category.all %} {{ category }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>
