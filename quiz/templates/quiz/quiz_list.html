@@ -7,7 +7,7 @@
     <ul class="quiz-list">
       {% for quiz in quiz_list %}
       <li>
-        <a href="{{ quiz.get_absolute_url }}">{{ quiz.title }}</a> (auth: {{quiz.author}}, questions: {{ quiz.question_set.count }})
+        <a href="{{ quiz.get_absolute_url }}">"{{ quiz.title }}"</a> (auth: {{quiz.author}}, questions: {{ quiz.question_set.count }})
       </li>
       {% endfor %}
     </ul>

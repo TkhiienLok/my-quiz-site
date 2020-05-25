@@ -86,7 +86,7 @@ class QuizListView(ListView):
         return context
 
 
-class QuizDraftsListView(ListView):
+class QuizDraftsListView(LoginRequiredMixin, ListView):
     model = Quiz
     template_name = "quiz/quiz_drafts_list.html"
     context_object_name = 'quiz_list'
@@ -96,6 +96,7 @@ class QuizDraftsListView(ListView):
         if query:
             quizzes = get_quiz_queryset(
                 {'column': 'status', 'search_value': 1},  # drafts
+                {'column': 'author', 'search_type': 'user', 'search_value': self.request.user},  # personal drafts
                 query=query,
                 order_by='created'
             )
@@ -110,12 +111,36 @@ class QuizDraftsListView(ListView):
         return context
 
 
+class PersonalQuizzesView(LoginRequiredMixin, ListView):
+    model = Quiz
+    template_name = "quiz/personal_quizzes.html"
+    context_object_name = 'quiz_list'
+
+    def get_queryset(self):
+        query = self.request.GET.get('q', None)
+        if query:
+            quizzes = get_quiz_queryset(
+                {'column': 'status', 'search_type': 'gt', 'search_value': 1},  # exclude drafts
+                {'column': 'author', 'search_type': 'user', 'search_value': self.request.user},
+                query=query,
+                order_by='created'
+            )
+        else:
+            quizzes = Quiz.objects.filter(author__user=self.request.user).exclude(status=1).order_by('-created')
+        return quizzes
+
+    def get_context_data(self, **kwargs):
+        context = super(PersonalQuizzesView, self).get_context_data(**kwargs)
+        query = self.request.GET.get('q')
+        context['query'] = str(query)
+        return context
+
+
 class QuizDetailView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         quiz = get_object_or_404(Quiz, slug__iexact=kwargs.get("slug"))
         has_rights_to_edit = self.request.user.is_authenticated and (
                     quiz.author.user == self.request.user or self.request.user.is_superuser)
-        quiz_status = quiz.get_status()
         try:
             score = quiz.score_set.get(student=self.request.user, quiz=quiz)
             questions = quiz.question_set.all()
@@ -126,7 +151,6 @@ class QuizDetailView(LoginRequiredMixin, View):
                 'questions': questions,
                 'correct_answers_string': correct_answers,
                 'has_rights_to_edit': has_rights_to_edit,
-                'quiz_status': quiz_status
             }
             return render(request, 'quiz/quiz_score.html', context)
         except Score.DoesNotExist:
@@ -135,7 +159,6 @@ class QuizDetailView(LoginRequiredMixin, View):
                 'form_list': form_list,
                 'quiz': quiz,
                 'has_rights_to_edit': has_rights_to_edit,
-                'quiz_status': quiz_status
             }
             return render(request, 'quiz/quiz_detail.html', context)
 

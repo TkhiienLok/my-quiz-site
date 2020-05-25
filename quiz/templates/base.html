@@ -77,6 +77,7 @@
             </a>
             <div class="dropdown-menu" aria-labelledby="quizNavbarDropdownMenuLink">
               <a class="dropdown-item" href="{% url 'quizzes' %}">Public quizzes</a>
+              <a class="dropdown-item" href="{% url 'personal-quizzes' %}">My quizzes</a>
               <a class="dropdown-item" href="{% url 'quiz-drafts' %}">Drafts</a>
               <a class="dropdown-item" href="{% url 'quiz-new' %}">New quiz</a>
             </div>
@@ -143,6 +144,9 @@ href="#">Terms</a></p>
       var path = window.location.pathname;
       if (path == {% url 'quiz-drafts' %}) {
         $('#quiz-search-form').attr('action', {% url 'quiz-drafts' %});
+        return;
+      } else if (path == {% url 'personal-quizzes' %}) {
+        $('#quiz-search-form').attr('action', {% url 'personal-quizzes' %});
         return;
       }
       $('#quiz-search-form').attr('action', {% url 'quizzes' %});

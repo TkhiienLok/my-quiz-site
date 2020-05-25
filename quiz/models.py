@@ -37,7 +37,7 @@ class Quiz(models.Model):
     STATUS_CHOICES = (
         (1, 'draft'),
         (2, 'public'),
-        (3, 'close'),
+        (3, 'closed'),
     )
     title = models.CharField(max_length=200)
     author = models.ForeignKey(UserProfile, related_name='author', on_delete=models.SET_NULL, null=True)
@@ -83,7 +83,8 @@ class Quiz(models.Model):
         self.status = 3
         self.save()
 
-    def get_status(self):
+    @property
+    def access_status(self):
         statuses = dict(self.STATUS_CHOICES)
         return statuses[self.status]
 

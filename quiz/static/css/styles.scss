@@ -63,3 +63,15 @@ label.control-label[for$="question"], .inline.questions .question-counter {
 .quiz-detail-menu {
     display: inline;
 }
+
+.quiz-closed {
+    color: $bright_purple;
+}
+
+.quiz-public {
+    color: $bright_turquoise;
+}
+
+.quiz-draft {
+    color: $lilac_violet;
+}

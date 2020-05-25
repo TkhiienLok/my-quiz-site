@@ -10,9 +10,9 @@
 <div class="container">
 	<h1>"{{ quiz.title }}" Results
 		{% if has_rights_to_edit %}
-		<span class="quiz-status">({{ quiz_status|capfirst }})</span>
+		<span class="quiz-status">({{ quiz.access_status|capfirst }})</span>
 			<div class="quiz-detail-menu">
-				{% if not quiz_status == 'public' %}
+				{% if not quiz.access_status == 'public' %}
 					<a class="button-link publish-post-link post-menu-link btn save" href="{% url 'quiz_publish' pk=quiz.pk %}">Publish</a>
 				{% else %}
 					<a class="button-link publish-post-link post-menu-link btn remove-button" href="{% url 'quiz_close' pk=quiz.pk %}">Close</a>

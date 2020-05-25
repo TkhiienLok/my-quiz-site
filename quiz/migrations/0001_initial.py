@@ -33,7 +33,7 @@ class Migration(migrations.Migration):
                 ('title', models.CharField(max_length=200)),
                 ('slug', models.SlugField(verbose_name='slug')),
                 ('summary', models.TextField(help_text='Enter a brief description of the test', max_length=1000)),
-                ('status', models.IntegerField(choices=[(1, 'draft'), (2, 'public'), (3, 'close')], default=1, verbose_name='status')),
+                ('status', models.IntegerField(choices=[(1, 'draft'), (2, 'public'), (3, 'closed')], default=1, verbose_name='status')),
                 ('published_date', models.DateTimeField(blank=True, null=True, verbose_name='published_date')),
                 ('created', models.DateTimeField(auto_now_add=True, verbose_name='created')),
                 ('author', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='author', to='accounts.UserProfile')),
