@@ -49,16 +49,13 @@ label.control-label[for$="question"], .inline.questions .question-counter {
     font-weight: 600;
 }
 
-.quiz-list {
-    li {
-        margin-bottom: 12px;
-    }
-
-    .edit-button {
-        padding: 0 6px;
+@media only screen and (min-width: 769px) {
+    .quiz-list {
+        li {
+            margin-bottom: 18px;
+        }
     }
 }
-
 .quiz-detail-menu {
     display: inline;
 }
@@ -73,4 +70,12 @@ label.control-label[for$="question"], .inline.questions .question-counter {
 
 .quiz-draft {
     color: $lilac_violet;
+}
+
+@media only screen and (max-width: 768px) {
+    .quiz-list {
+        li {
+            margin-bottom: 12px;
+        }
+    }
 }

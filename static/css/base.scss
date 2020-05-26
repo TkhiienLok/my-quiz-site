@@ -123,7 +123,7 @@ main {
     font-family: 'Lato', sans-serif;
     font-size: 16px;
     margin: 4px 4px 8px;
-    padding: 0 4px;
+    padding: 2px 4px 3px;
     text-decoration: none;
     float: right;
     border-radius: 6px;
@@ -361,6 +361,11 @@ main {
 
     .poll-panel {
         width: 85%;
+    }
+
+    .submit-button, .remove-button, .edit-button, .view-button, .add-button, .neutral-button {
+        margin: 2px 4px 6px;
+        padding: 0px 4px;
     }
 }
 

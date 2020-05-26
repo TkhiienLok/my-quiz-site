@@ -12,6 +12,7 @@ from django.views.generic import (
     DetailView,
     ListView,
     CreateView,
+    UpdateView,
     DeleteView
 )
 
@@ -228,6 +229,16 @@ class CreateQuizView(LoginRequiredMixin,CreateView):
             self.form_valid(form, **kwargs)
 
         return redirect(reverse('questions-edit', kwargs={'pk': self.object.pk}))
+
+
+class QuizUpdateView(UpdateView):
+    model = Quiz
+    form_class = QuizForm
+    template_name_suffix = '_update_form'
+    context_object_name = 'quiz'
+
+    def get_success_url(self):
+        return reverse('questions-edit', kwargs={'pk': self.object.pk})
 
 
 class QuizDeleteView(DeleteView):

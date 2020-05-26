@@ -4,19 +4,23 @@
     <h1>Your quizzes</h1>
 
     {% if quiz_list %}
-    <ul class="quiz-list">
+    <ol class="quiz-list">
       {% for quiz in quiz_list %}
       <li>
         <div style="display: inline;">
           <a href="{{ quiz.get_absolute_url }}">"{{ quiz.title }}"</a> Status: <span class="quiz-{{ quiz.access_status }}">{{ quiz.access_status }}</span>, {{ quiz.question_set.count }} questions
-          <a href="{% url 'quiz-delete' pk=quiz.pk %}" class="remove-button btn-xs">Remove <i class="far fa-trash-alt"></i></a>
-          <a href="{% url 'questions-edit' pk=quiz.pk %}" class="neutral-button btn-xs">Edit</a>
+            <div>
+              <a href="{% url 'quiz-delete' pk=quiz.pk %}" class="remove-button btn-xs">Remove <i class="far fa-trash-alt"></i></a>
+              <a href="{% url 'questions-edit' pk=quiz.pk %}" class="neutral-button btn-xs">Edit</a>
+            </div>
         </div>
       </li>
       {% endfor %}
-    </ul>
-    <a href="{% url 'quizzes' %}" class="view-button">Published quizzes</a>
-    <a href="{% url 'quiz-new' %}">New quiz</a>
+    </ol>
+    <div style="display:inline-block;">
+      <a href="{% url 'quiz-drafts' %}" class="view-button">Drafts</a>
+      <a href="{% url 'quiz-new' %}" class="add-button">New quiz +</a>
+    </div>
     {% else %}
       <p>There are no quizzes in the library.</p>
     {% endif %}       

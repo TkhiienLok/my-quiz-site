@@ -1,7 +1,7 @@
 ﻿{% extends "base.html" %}
 
 {% block content %}
-    <h1>Quiz Drafts</h1>
+    <h1>Your draft quizzes</h1>
 
     {% if quiz_list %}
     <ul class="quiz-list">
@@ -16,7 +16,7 @@
       {% endfor %}
     </ul>
     <a href="{% url 'quizzes' %}" class="view-button">Published quizzes</a>
-    <a href="{% url 'quiz-new' %}">New quiz</a>
+    <a href="{% url 'quiz-new' %}" class="add-button">New quiz</a>
     {% else %}
       <p>There are no quizzes in the library.</p>
     {% endif %}       

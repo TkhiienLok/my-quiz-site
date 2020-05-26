@@ -3,7 +3,13 @@
 
 {% block content %}
 {% with children_formset=question_formset %}
-<h1>Add questions and answers to quiz "{{ quiz.title }}"</h1>
+<h1>Add questions and answers to quiz "{{ quiz.title }}"
+  <a href="{% url 'quiz-update' pk=quiz.pk %}" class="edit-button btn-xs">Change general info</a>
+</h1>
+<div>
+  <p><b>Categories:</b> {{ quiz.display_category }}</p>
+  <p><b>Summary:</b> {{ quiz.summary }}</p>
+</div>
 <form action="{% url 'questions-edit' pk=quiz.pk %}" method="POST">
 {{ children_formset.management_form }}
 {{ children_formset.non_form_errors }}
