@@ -25,6 +25,12 @@
                         <p><span class="profile-field-name">Website:</span><a href="{{ user.userprofile.website }}"> {{ user.userprofile.website }}</a></p>
                         <p><span class="profile-field-name">Bio:</span> {{ user.userprofile.bio }}</p>
                     </div>
+                    <div>
+                        <h2>Achievements:</h2>
+                        <ul>
+                            <li><p>Passed <b>{{ scores }} </b> quizzes</p></li>
+                        </ul>
+                    </div>
                     <a href="{% url 'accounts:change-password' %}">Change password</a>
                     <a href="{% url 'accounts:edit-profile-url' %}" class="btn edit-profile-button">Edit</a>
                 </div>

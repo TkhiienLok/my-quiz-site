@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Category List</h1>
+
+    {% if categories %}
+    <ul class="quiz-list">
+      {% for category in categories %}
+      <li>
+        <div style="display: inline;">
+          <a href="{% url 'quizzes' %}?q=&category={{ category.name }}">"{{ category }}" ({{ category.number_of_quizzes }} quizzes)</a>
+          {% if user.is_superuser %}
+          <a href="{% url 'category-delete' pk=category.pk %}" class="btn remove-button">Remove</a>
+          <a href="{% url 'category-update' pk=category.pk %}" class="btn edit-button">Edit</a>
+          {% endif %}
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
+    <a href="{% url 'category-new' %}" class="add-button">New category +</a>
+    <div>
+      <h2>Math</h2>
+      <ul>
+        <li><strong>Math categories:</strong> {{ math_categories }},<strong> Math quizzes:</strong> {{ num_math_quizzes }}</li>
+      </ul>
+    </div>
+    {% else %}
+      <p>There are no quizzes in the library.</p>
+    {% endif %}
+{% endblock %}

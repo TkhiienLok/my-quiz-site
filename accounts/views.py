@@ -17,6 +17,7 @@ from django.template.loader import render_to_string
 from accounts.forms import SignUpForm, UserProfileForm
 from accounts.models import UserProfile
 from accounts.tokens import account_activation_token
+from quiz.models import Score
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
@@ -101,6 +102,7 @@ class ProfileView(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super(ProfileView, self).get_context_data(**kwargs)
         context["user"] = self.request.user
+        context["scores"] = Score.objects.filter(student=self.request.user).count()
         return context
 
 
@@ -111,6 +113,7 @@ class GuestProfileView(TemplateView):
         context = super(GuestProfileView, self).get_context_data(**kwargs)
         viewed_user = get_object_or_404(User, pk=kwargs.get('pk'))
         context['viewed_user'] = viewed_user
+        context["scores"] = Score.objects.filter(student=self.request.user).count()
         return context
 
 

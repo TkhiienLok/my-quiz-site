@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+{% block content %}
+<div class="container">
+    <h1>New Category</h1>
+
+    <form method="POST" action="{% url 'category-new' %}" id="category-create-form">
+        {% csrf_token %}
+        {% bootstrap_form form %}
+        <input type="submit" value="Create category" class="btn save"/>
+    </form>
+</div>
+{% endblock %}

@@ -8,17 +8,12 @@
 <p>Welcome to <em>QuizLibrary</em>, a very basic Django website developed as
 platform for passing and creating quizzes.</p>
 
-<h2>Dynamic content</h2>
-
-  <p>The library has the following record counts:</p>
+<h2>General Info:</h2>
   <ul>
-    <li><strong>Quizzes:</strong> {{ num_quizzes }}</li>
+    <li><a href="{% url 'quizzes' %}"><strong>Quizzes:</strong> {{ num_quizzes }}</a></li>
+    <li><a href="{% url 'category-list' %}"><strong>Categories:</strong> {{ categories_count }}</a></li>
+    <li><strong>Authors:</strong> {{ authors_count }}</li>
     <li><strong>Quizzes passed:</strong> {{ num_passed }}</li>
-    <li><strong>Authors:</strong> {{ num_authors }}</li>
-  </ul>
-
-  <ul>
-      <li><strong>Math Quizzes:</strong> {{ num_math_quizzes }}</li>
   </ul>
 
 {% endblock %}

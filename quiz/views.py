@@ -5,7 +5,7 @@ from django.http import HttpResponseRedirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
 from django.utils import timezone
-from django.db.models import Q
+from django.db.models import Q, Count
 from django.urls import reverse
 from django.views.generic import (
     View,
@@ -13,12 +13,13 @@ from django.views.generic import (
     ListView,
     CreateView,
     UpdateView,
-    DeleteView
+    DeleteView,
+    TemplateView
 )
 
 from accounts.models import UserProfile
-from quiz.models import Quiz, Question, Score
-from quiz.forms import quiz_forms, QuizForm, QuestionFormset
+from quiz.models import Quiz, Question, Score, Category
+from quiz.forms import quiz_forms, QuizForm, QuestionFormset, CategoryForm
 
 
 def get_quiz_queryset(*filters, query=None, order_by=None):
@@ -48,17 +49,20 @@ def get_quiz_queryset(*filters, query=None, order_by=None):
 def index(request):
     """ home page """
     num_quizzes = Quiz.objects.all().count()
-    num_math_quizzes = Quiz.objects.filter(title__contains='math').count()
+    authors_count = UserProfile.objects.annotate(num_quizzes=Count('author')).filter(num_quizzes__gt=0).count()
+
     context = {
         'num_quizzes': num_quizzes,
-        'num_math_quizzes': num_math_quizzes,
+        'categories_count': Category.objects.count(),
+        'authors_count': authors_count
     }
+
     student = request.user
     if request.user.is_authenticated:
         quizzes = Quiz.objects.filter(students=student)
-        scores = Score.objects.filter(student=student)
+        scores = Score.objects.filter(student=student).count()
         context['quizzes'] = quizzes
-        context['scores'] = scores
+        context['num_passed'] = scores
     return render(request, 'index.html', context)
 
 
@@ -69,10 +73,16 @@ class QuizListView(ListView):
 
     def get_queryset(self):
         query = self.request.GET.get('q', None)
-        if query:
+        category = self.request.GET.get('category', None)
+
+        if query or category:
+            filters = [{'column': 'status', 'search_value': 2},
+                       {'column': 'published_date', 'search_type': 'lte', 'search_value': timezone.now()}]
+            if category:
+                category_objects = Category.objects.filter(name__contains=category)
+                filters.append({'column': 'category', 'search_type': 'in', 'search_value': category_objects})
             quizzes = get_quiz_queryset(
-                {'column': 'status', 'search_value': 2},
-                {'column': 'published_date', 'search_type': 'lte', 'search_value': timezone.now()},
+                *filters,
                 query=query,
                 order_by='published_date'
             )
@@ -211,24 +221,29 @@ def process_quiz(request, slug):
     return HttpResponseRedirect(quiz.get_absolute_url())
 
 
-class CreateQuizView(LoginRequiredMixin,CreateView):
+def _get_form(request, formcls, prefix):
+    data = request.POST if prefix in request.POST else None
+    return formcls(data, prefix=prefix)
 
-    model = Quiz
-    form_class = QuizForm
 
-    def form_valid(self, form, **kwargs):
-        quiz = form.save(commit=False)
-        user_profile = get_object_or_404(UserProfile, user=self.request.user)
-        quiz.author = user_profile
-        quiz.save()
-        return super().form_valid(form)
+class CreateQuizView(TemplateView):
+    template_name = 'quiz/quiz_form.html'
+
+    def get(self, request, *args, **kwargs):
+        return self.render_to_response({'quiz_form': QuizForm(prefix='quiz-create'), 'category_form': CategoryForm(prefix='category-create')})
 
     def post(self, request, *args, **kwargs):
-        form = QuizForm(request.POST)
-        if form.is_valid():
-            self.form_valid(form, **kwargs)
-
-        return redirect(reverse('questions-edit', kwargs={'pk': self.object.pk}))
+        quiz_form = _get_form(request, QuizForm, 'quiz-create')
+        category_form = _get_form(request, CategoryForm, 'category-create')
+        if quiz_form.is_bound and quiz_form.is_valid():
+            quiz = quiz_form.save(commit=False)
+            user_profile = get_object_or_404(UserProfile, user=self.request.user)
+            quiz.author = user_profile
+            quiz.save()
+            return redirect(reverse('questions-edit', kwargs={'pk': quiz.pk}))
+        elif category_form.is_bound and category_form.is_valid():
+            category_form.save()
+        return self.render_to_response({'quiz_form': quiz_form, 'category_form': category_form})
 
 
 class QuizUpdateView(UpdateView):
@@ -266,3 +281,45 @@ def edit_questions(request, pk):
     return render(request, 'quiz/edit_questions.html', {
         'quiz': quiz,
         'question_formset': formset})
+
+
+class CategoryCreateView(CreateView):
+    model = Category
+    form_class = CategoryForm
+    template_name = 'quiz/category/category_create.html'
+    context_object_name = 'category'
+
+    def get_success_url(self):
+        return reverse('category-list')
+
+
+class CategoryListView(ListView):
+    model = Category
+    template_name = 'quiz/category/category_list.html'
+    context_object_name = 'categories'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(CategoryListView, self).get_context_data()
+        math_categories = Category.objects.filter(name__contains='Math')
+        context['math_categories'] = math_categories.count()
+        context['num_math_quizzes'] = Quiz.objects.filter(category__in=math_categories).count()
+        return context
+
+
+class CategoryUpdateView(UpdateView):
+    model = Category
+    form_class = CategoryForm
+    template_name = 'quiz/category/category_update.html'
+    context_object_name = 'category'
+
+    def get_success_url(self):
+        return reverse('category-list')
+
+
+class CategoryDeleteView(DeleteView):
+    model = Category
+    template_name = 'quiz/category/category_confirm_delete.html'
+    context_object_name = 'category'
+
+    def get_success_url(self):
+        return reverse('category-list')

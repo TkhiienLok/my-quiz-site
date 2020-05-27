@@ -37,7 +37,7 @@ class Migration(migrations.Migration):
                 ('published_date', models.DateTimeField(blank=True, null=True, verbose_name='published_date')),
                 ('created', models.DateTimeField(auto_now_add=True, verbose_name='created')),
                 ('author', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='author', to='accounts.UserProfile')),
-                ('category', models.ManyToManyField(help_text='Select a topic for this quiz', to='quiz.Category')),
+                ('category', models.ManyToManyField(help_text='Select a category for this quiz', to='quiz.Category')),
                 ('students', models.ManyToManyField(blank=True, related_name='students', to=settings.AUTH_USER_MODEL)),
             ],
             options={

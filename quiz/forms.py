@@ -35,7 +35,7 @@ def quiz_forms(quiz, data=None):
 class QuizForm(forms.ModelForm):
     class Meta:
         model = Quiz
-        fields = ['title', 'slug', 'summary', 'category', 'status']
+        fields = ['title', 'slug', 'summary', 'status', 'category']
 
 
 AnswerFormset = inlineformset_factory(Question, Answer, extra=0, min_num=1, fields=['question', 'content', 'weight', 'correct'])
@@ -83,3 +83,9 @@ QuestionFormset = inlineformset_factory(Quiz,
                                         extra=0,
                                         min_num=1,
                                         fields='__all__')
+
+
+class CategoryForm(forms.ModelForm):
+    class Meta:
+        model = Category
+        fields = ('name',)

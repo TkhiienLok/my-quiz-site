@@ -11,7 +11,7 @@ from accounts.models import UserProfile
 class CategoryManager(models.Manager):
 
     def new_category(self, category):
-        new_category = self.create(category=re.sub('\s+', '-', category).lower())
+        new_category = self.create(name=re.sub('\s+', '-', category).lower())
 
         new_category.save()
         return new_category
@@ -32,6 +32,10 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
+    def number_of_quizzes(self):
+        return Quiz.objects.filter(models.Q(category__in=[self]) &
+                                   models.Q(status=2)).distinct().count()
+
 
 class Quiz(models.Model):
     STATUS_CHOICES = (
@@ -43,7 +47,7 @@ class Quiz(models.Model):
     author = models.ForeignKey(UserProfile, related_name='author', on_delete=models.SET_NULL, null=True)
     slug = models.SlugField('slug')
     summary = models.TextField(max_length=1000, help_text="Enter a brief description of the test")
-    category = models.ManyToManyField(Category, help_text="Select a topic for this quiz")
+    category = models.ManyToManyField(Category, help_text="Select a category for this quiz")
     status = models.IntegerField('status', choices=STATUS_CHOICES, default=1)
     published_date = models.DateTimeField('published_date', null=True, blank=True)
     students = models.ManyToManyField(User, blank=True, related_name='students')

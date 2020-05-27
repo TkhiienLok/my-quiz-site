@@ -1,14 +1,58 @@
 {% extends "base.html" %}
-{% load bootstrap3 %}
+{% load bootstrap3 compress %}
 
 {% block content %}
 <div class="container">
     <h1>New Quiz</h1>
-
-    <form action="{% url 'quiz-new' %}" method="POST">
+    {{ quiz_form.errors }}
+    <form action="{% url 'quiz-new' %}" method="POST" id="quiz-create-form">
         {% csrf_token %}
-        {% bootstrap_form form %}
-        <input type="submit" value="Save" class="btn save"/>
+        {% bootstrap_form quiz_form %}
+        <input type="submit" name="{{ quiz_form.prefix }}" value="Save quiz" class="btn save btn-block"/>
     </form>
+    <form action="{% url 'quiz-new' %}" method="POST" id="category-create-form" style="display: inline-block;">
+        {% csrf_token %}
+        <hr>
+        <h2>Create new category</h2>
+        {{ category_form.errors }}
+        {% bootstrap_form category_form %}
+        <input type="submit" name="{{ category_form.prefix }}" value="create" class="btn save"/>
+    </form>
+    <iframe name="hiddenFrame" id="hiddenFrame" style="display: none;"></iframe>
 </div>
 {% endblock %}
+
+{% compress js %}
+{% block extra_script %}
+<script type="text/javascript">
+    $(function () {
+        attachFormSubmitEvent("category-create-form");
+    });
+
+    function formSubmit(event) {
+        var url = $(event.target).attr('action');
+        var request = new XMLHttpRequest();
+        request.open('POST', url, true);
+        request.onload = function() { // request successful
+            var response = request.responseText;
+            var newCategorySelect = $(response).find('select[name="{{ quiz_form.prefix }}-category"]').html();
+            $('select[name="{{ quiz_form.prefix }}-category"]').html(newCategorySelect);
+        };
+
+        request.onerror = function() {
+            // request failed
+        };
+        var data = new FormData(event.target); // create FormData from form that triggered event
+        data.append($(event.target).find('input[type="submit"]').attr('name'), $(event.target).find('input[type="submit"]').val());
+
+        request.send(data);
+        event.preventDefault();
+    }
+
+    // and you can attach form submit event like this for example
+    function attachFormSubmitEvent(formId) {
+        document.getElementById(formId).addEventListener("submit", formSubmit);
+    }
+</script>
+{% endblock %}
+{% endcompress %}
