@@ -20,7 +20,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 env = environ.Env()
 
-DEBUG = env.bool('DEBUG', False)
+DEBUG = env.bool('DJANGO_DEBUG', False)
 
 ENV = False
 env_file = os.path.dirname(__file__) + '/../.env'
@@ -37,7 +37,7 @@ SECRET_KEY = env.str('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', '0.0.0.0', 'localhost', 'lok-quiz-app.herokuapp.com']
+ALLOWED_HOSTS = ['127.0.0.1', '0.0.0.0', 'localhost', 'lok-quiz-platform.herokuapp.com']
 
 
 # Application definition
