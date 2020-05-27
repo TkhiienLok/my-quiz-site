@@ -13,8 +13,9 @@ class QuestionForm(forms.Form):
         self.question = question.question
         answers = question.choices.order_by('weight').all()
         self.fields['answers'].choices = [(i, a.content) for i, a in enumerate(answers)]
+        self.correct = None
         for pos, answer in enumerate(answers):
-            if answer.id == question.correct_answer.id:
+            if question.correct_answer and answer.id == question.correct_answer.id:
                 self.correct = pos
                 break
 
