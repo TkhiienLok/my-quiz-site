@@ -61,7 +61,7 @@ def signup(request):
             user.userprofile.birth_date = form.cleaned_data.get('birth_date')
             user.save()
             current_site = get_current_site(request)
-            subject = 'Activate Your Lok-Django-Blog Account'
+            subject = 'Activate Your Lok-Quiz-Platform Account'
             message = render_to_string('accounts/account_activation_email.html', {
                 'user': user,
                 'domain': current_site.domain,
