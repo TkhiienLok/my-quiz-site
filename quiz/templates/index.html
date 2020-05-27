@@ -3,7 +3,7 @@
 {% block head %}<title>Quizzes Library info</title>{% endblock %}
 
 {% block content %}
-<h1>Quizzes Library Home</h1>
+<h1>Quiz Library</h1>
 
 <p>Welcome to <em>QuizLibrary</em>, a very basic Django website developed as
 platform for passing and creating quizzes.</p>
@@ -13,7 +13,9 @@ platform for passing and creating quizzes.</p>
     <li><a href="{% url 'quizzes' %}"><strong>Quizzes:</strong> {{ num_quizzes }}</a></li>
     <li><a href="{% url 'category-list' %}"><strong>Categories:</strong> {{ categories_count }}</a></li>
     <li><strong>Authors:</strong> {{ authors_count }}</li>
-    <li><strong>Quizzes passed:</strong> {{ num_passed }}</li>
+    {% if user.is_authenticated %}
+    <li><strong>You passed quizzes:</strong> {{ num_passed }}</li>
+    {% endif %}
   </ul>
 
 {% endblock %}
