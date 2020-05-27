@@ -20,7 +20,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 env = environ.Env()
 
-DEBUG = env.bool('DJANGO_DEBUG', False)
+DEBUG = env.bool('DEBUG', False)
 
 ENV = False
 env_file = os.path.dirname(__file__) + '/../.env'
