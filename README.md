@@ -15,17 +15,17 @@ Design of this website is selfmade therefore far from perfect. Home page:
 * Quiz detail information contains author
 ##Screenshots:
 
-###Create quiz
+### Create quiz
 <a href="https://ibb.co/jD9KrhM"><img src="https://i.ibb.co/M7yTCnV/Quiz-create.png" alt="Quiz-create" border="0"></a>
 
-###Quiz results
+### Quiz results
 <a href="https://ibb.co/ydSzbk7"><img src="https://i.ibb.co/FmVQjYC/Results.png" alt="Results" border="0"></a>
 
-###Public quizzes
+### Public quizzes
 <a href="https://ibb.co/t3q3skN"><img src="https://i.ibb.co/Lvxvtbq/Public-quiz-list.png" alt="Public-quiz-list" border="0"></a>
-###Signup
+### Signup
 <a href="https://ibb.co/Z8ywyKr"><img src="https://i.ibb.co/QNsqsnV/signup.png" alt="signup" border="0"></a>
-###Signin
+### Signin
 <a href="https://imgbb.com/"><img src="https://i.ibb.co/jL2wcyG/login.png" alt="login" border="0"></a>
-###Change profile settings
+### Change profile settings
 <a href="https://ibb.co/JBX8n8S"><img src="https://i.ibb.co/ngh4r4K/Profile.png" alt="Profile" border="0"></a>
