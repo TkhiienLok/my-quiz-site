@@ -25,18 +25,46 @@ class QuestionForm(forms.Form):
         return self.cleaned_data['answers'] == str(self.correct)
 
 
+class MultipleChoiceQuestionForm(forms.Form):
+    answers = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple(), label=u"Please select an answer:")
+
+    def __init__(self, question, *args, **kwargs):
+        super(MultipleChoiceQuestionForm, self).__init__(*args, **kwargs)
+        self.question = question.question
+        answers = question.choices.order_by('weight').all()
+        self.fields['answers'].choices = [(i, a.content) for i, a in enumerate(answers)]
+        self.correct = []
+        for pos, answer in enumerate(answers):
+            if question.correct_answers:
+                for correct_answer in question.correct_answers:
+                    if answer.id == correct_answer.id:
+                        self.correct.append(str(pos))
+
+    def is_correct(self):
+        if not self.is_valid():
+            return False
+        for answer in self.cleaned_data['answers']:
+            if answer not in self.correct:
+                return False
+        return True
+
+
 def quiz_forms(quiz, data=None):
     questions = Question.objects.filter(quiz=quiz).order_by('id')
     form_list = []
-    for pos, question in enumerate(questions):
-        form_list.append(QuestionForm(question, data, prefix=pos))
+    if quiz.multiple_choice:
+        for pos, question in enumerate(questions):
+            form_list.append(MultipleChoiceQuestionForm(question, data, prefix=pos))
+    else:
+        for pos, question in enumerate(questions):
+            form_list.append(QuestionForm(question, data, prefix=pos))
     return form_list
 
 
 class QuizForm(forms.ModelForm):
     class Meta:
         model = Quiz
-        fields = ['title', 'slug', 'summary', 'status', 'category']
+        fields = ['title', 'slug', 'multiple_choice', 'summary', 'status', 'category']
 
 
 AnswerFormset = inlineformset_factory(Question, Answer, extra=0, min_num=1, fields=['question', 'content', 'weight', 'correct'])

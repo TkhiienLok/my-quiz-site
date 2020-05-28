@@ -118,6 +118,11 @@
     $($(`#empty-answer-form${nestedFormPrefix}`).html().replace(/__prefix__/g, form_idx)).insertBefore($(this));
     $(`#id_${nestedFormPrefix}-TOTAL_FORMS`).val(parseInt(form_idx) + 1);
     returnDeleteCheckboxes();
+  }).on('click', '.answer-forms input:checkbox[name$=-correct]', function() { // uncheck all checkboxes inside of on answer set if multiple choice disabled
+    {% if not quiz.multiple_choice %}
+      $(this).closest('.answer-forms').find('input:checkbox[name$=-correct]').prop('checked', false);
+      $(this).prop('checked', true);
+    {% endif %}
   });
 
   function returnDeleteCheckboxes() {  // Return the default checkboxes from hidden fields which were created by jquery.formset module:

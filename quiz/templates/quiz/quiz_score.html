@@ -23,7 +23,10 @@
 	</h1>
 	<p><strong>Author:</strong> <a href="{{ quiz.author.get_absolute_url }}">{{ quiz.author }}</a></p>
   <p><strong>Description:</strong> {{ quiz.summary }}</p>
-  <p><strong>Categories:</strong> {% for category in quiz.category.all %} {{ category }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>
+  <p><strong>Categories:</strong>
+		{% for category in quiz.category.all %}
+		<a href="{% url 'quizzes' %}?q=&category={{ category.name }}">{{ category }}</a>{% if not forloop.last %},{% endif %}
+		{% endfor %}</p>
 
 	<h3>Your result: {{ score.correct_answer_count }}/{{ score.total_questions }}</h3>
 	<ul class="question-list">
@@ -40,7 +43,7 @@
 				<span class="question-counter">{{ forloop.counter }}) </span>{{ question.question }}
 				<ul>
 					{% for answer in question.choices.all %}
-						<li class="{% ifequal question.correct_answer answer %}correct{% endifequal %}">{{ answer.content }}</li>
+						<li class="{% if answer in question.correct_answers %}correct{% endif %}">{{ answer.content }}</li>
 					{% endfor %}
 				</ul>
 			</li>

@@ -17,7 +17,10 @@
 
   <p><strong>Author:</strong> <a href="{{ quiz.author.get_absolute_url }}">{{ quiz.author }}</a></p>
   <p><strong>Description:</strong> {{ quiz.summary }}</p>
-  <p><strong>Category:</strong> {% for category in quiz.category.all %} {{ category }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>
+  <p><strong>Category:</strong>
+    {% for category in quiz.category.all %}
+    <a href="{% url 'quizzes' %}?q=&category={{ category.name }}">{{ category }}</a> {% if not forloop.last %},
+    {% endif %}{% endfor %}</p>
 
   <div style="margin-left:20px;margin-top:20px">
     <h4>Questions</h4>

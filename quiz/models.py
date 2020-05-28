@@ -52,6 +52,10 @@ class Quiz(models.Model):
     published_date = models.DateTimeField('published_date', null=True, blank=True)
     students = models.ManyToManyField(User, blank=True, related_name='students')
     created = models.DateTimeField('created', auto_now_add=True)
+    multiple_choice = models.BooleanField(blank=True,
+                                          default=True,
+                                          help_text="Is this going to be a multiple choice quiz?",
+                                          verbose_name="Yes")
 
     class Meta:
         verbose_name = 'quiz'
@@ -116,6 +120,10 @@ class Question(models.Model):
     @property
     def correct_answer(self):
         return Answer.objects.filter(question=self).filter(correct=True)[0] if Answer.objects.filter(question=self).filter(correct=True).count() else None
+
+    @property
+    def correct_answers(self):
+        return Answer.objects.filter(question=self).filter(correct=True)
 
     @property
     def title(self):
