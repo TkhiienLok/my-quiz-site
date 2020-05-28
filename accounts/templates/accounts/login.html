@@ -11,7 +11,7 @@
     <form method="post" action="{% url 'accounts:login' %}" class="signin-signout-form">
         {% csrf_token %}
         <div class="row">
-            <div class="col-md-4 col-xs-12 col-sm-8">
+            <div class="col-md-8 col-xs-12 col-sm-8">
                 {% for message in messages %}
                     {% if "login" in message.tags %}
                         <div class="alert alert-danger">
